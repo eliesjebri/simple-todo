@@ -6,9 +6,16 @@ const getItems = require('./routes/getItems');
 const addItem = require('./routes/addItem');
 const updateItem = require('./routes/updateItem');
 const deleteItem = require('./routes/deleteItem');
+const { logInfo, logSuccess, logWarn, logError } = require('./log');
 
 app.use(express.json());
 app.use(express.static(__dirname + '/static'));
+
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+    next();
+});
+
 
 app.get('/version', (req, res) => {
     res.send({ version });
@@ -20,12 +27,20 @@ app.post('/items', addItem);
 app.put('/items/:id', updateItem);
 app.delete('/items/:id', deleteItem);
 
-db.init().then(() => {
-    app.listen(3000, () => console.log('Listening on port 3000'));
-}).catch((err) => {
-    console.error(err);
-    process.exit(1);
-});
+const { logInfo, logSuccess, logError } = require('./log');
+
+db.init()
+    .then(() => {
+        logInfo(`[DB] Using ${process.env.DB_TYPE || 'SQLite'} backend`);
+        logSuccess('Database initialized successfully');
+        app.listen(3000, () => logInfo('[SERVER] Listening on port 3000'));
+    })
+    .catch((err) => {
+        logError('Failed to initialize database', err);
+        process.exit(1);
+    });
+
+
 
 const gracefulShutdown = () => {
     db.teardown()
