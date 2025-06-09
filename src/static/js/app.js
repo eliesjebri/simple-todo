@@ -115,11 +115,10 @@ function AddItemForm({ onNewItem }) {
 }
 
 function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
-    const { Form, InputGroup, Button, Tooltip, OverlayTrigger } = ReactBootstrap;
+    const { Form, InputGroup, Button } = ReactBootstrap;
     const [name, setName] = React.useState(item.name);
     const [completed, setCompleted] = React.useState(item.completed);
     const [updating, setUpdating] = React.useState(false);
-    const [showTooltip, setShowTooltip] = React.useState(false);
 
     const updateItem = () => {
         setUpdating(true);
@@ -134,8 +133,6 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
             .then(updated => {
                 onItemUpdate(updated);
                 setUpdating(false);
-                setShowTooltip(true);
-                setTimeout(() => setShowTooltip(false), 2000);
             });
     };
 
@@ -156,23 +153,15 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
                 onChange={e => setName(e.target.value)}
                 disabled={updating}
             />
-            <OverlayTrigger
-                placement="top"
-                overlay={<Tooltip>Modifications enregistrées !</Tooltip>}
-                show={showTooltip}
-            >
-                <Button variant="success" onClick={updateItem} disabled={updating}>
-                    ✅
-                </Button>
-            </OverlayTrigger>
+            <Button variant="success" onClick={updateItem} disabled={updating}>
+                ✅
+            </Button>
             <Button variant="danger" onClick={deleteItem}>
                 🗑️
             </Button>
         </InputGroup>
     );
 }
-
-
 
 
 ReactDOM.render(<App />, document.getElementById('root'));
