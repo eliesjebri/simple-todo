@@ -115,7 +115,7 @@ function AddItemForm({ onNewItem }) {
 }
 
 function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
-    const { Form, InputGroup, Button } = ReactBootstrap;
+    const { Container, Row, Col, Button, Form } = ReactBootstrap;
     const [name, setName] = React.useState(item.name);
     const [completed, setCompleted] = React.useState(item.completed);
     const [updating, setUpdating] = React.useState(false);
@@ -136,35 +136,57 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
             });
     };
 
-    const deleteItem = () => {
+    const removeItem = () => {
         fetch(`/items/${item.id}`, {
             method: 'DELETE',
         }).then(() => onItemRemoval(item));
     };
 
     return (
-    <div className={`item mb-3 ${completed ? 'completed' : ''}`}>
-    <InputGroup>
-        <InputGroup.Checkbox
-            checked={completed}
-            onChange={e => setCompleted(e.target.checked)}
-        />
-        <Form.Control
-            value={name}
-            onChange={e => setName(e.target.value)}
-            disabled={updating}
-        />
-        <Button variant="success" onClick={updateItem} disabled={updating}>
-            ✅
-        </Button>
-        <Button variant="danger" onClick={deleteItem}>
-            🗑️
-        </Button>
-    </InputGroup>
-    </div>
-
+        <Container fluid className={`item ${completed ? 'completed' : ''}`}>
+            <Row>
+                <Col xs={1} className="text-center">
+                    <Button
+                        className="toggles"
+                        size="sm"
+                        variant="link"
+                        onClick={() => {
+                            setCompleted(!completed);
+                            updateItem();
+                        }}
+                        aria-label={
+                            completed ? 'Mark item as incomplete' : 'Mark item as complete'
+                        }
+                    >
+                        <i
+                            className={`far ${completed ? 'fa-check-square' : 'fa-square'}`}
+                        />
+                    </Button>
+                </Col>
+                <Col xs={10} className="name">
+                    <Form.Control
+                        type="text"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        onBlur={updateItem}
+                        disabled={updating}
+                    />
+                </Col>
+                <Col xs={1} className="text-center remove">
+                    <Button
+                        size="sm"
+                        variant="link"
+                        onClick={removeItem}
+                        aria-label="Remove Item"
+                    >
+                        <i className="fa fa-trash text-danger" />
+                    </Button>
+                </Col>
+            </Row>
+        </Container>
     );
 }
+
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
