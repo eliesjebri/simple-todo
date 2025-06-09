@@ -127,7 +127,7 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name, completed }),
+            body: JSON.stringify({ name, completed: item.completed}),
         })
             .then(res => res.json())
             .then(updated => {
@@ -157,53 +157,57 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
     };
 
     return (
-        <Container fluid className="mb-3">
-            <Row className="item align-items-center">
-                <Col xs={1} className="text-center">
-                    <Button
-                        className="toggles"
-                        size="sm"
-                        variant="link"
-                        onClick={toggleCompletion}
-                        aria-label={
-                            completed ? 'Mark item as incomplete' : 'Mark item as complete'
-                        }
-                    >
-                        <i className={`far ${completed ? 'fa-check-square' : 'fa-square'}`} />
-                    </Button>
-                </Col>
-                <Col xs={8} className="name">
-                    <Form.Control
-                        type="text"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        className={completed ? 'completed' : ''}
-                        disabled={updating}
-                    />
-                </Col>
-                <Col xs={1} className="text-center">
-                    <Button
-                        size="sm"
-                        variant="success"
-                        onClick={updateItem}
-                        disabled={updating}
-                        aria-label="Update Item"
-                    >
-                        ✅
-                    </Button>
-                </Col>
-                <Col xs={1} className="text-center remove">
-                    <Button
-                        size="sm"
-                        variant="danger"
-                        onClick={removeItem}
-                        aria-label="Remove Item"
-                    >
-                        <i className="fa fa-trash text-danger" />
-                    </Button>
-                </Col>
-            </Row>
-        </Container>
+<Row>
+    <Col xs={1} className="text-center">
+        <Button
+            className="toggles"
+            size="sm"
+            variant="link"
+            onClick={toggleCompletion}
+            aria-label={
+                item.completed
+                    ? 'Mark item as incomplete'
+                    : 'Mark item as complete'
+            }
+        >
+            <i className={`far ${item.completed ? 'fa-check-square' : 'fa-square'}`} />
+        </Button>
+    </Col>
+
+    <Col xs={8} className="name">
+        <Form.Control
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className={item.completed ? 'completed' : ''}
+            disabled={updating}
+        />
+    </Col>
+
+    <Col xs={1} className="text-center">
+        <Button
+            size="sm"
+            variant="success"
+            onClick={updateItem}
+            disabled={updating}
+            aria-label="Update Item"
+        >
+            ✅
+        </Button>
+    </Col>
+
+    <Col xs={1} className="text-center remove">
+        <Button
+            size="sm"
+            variant="link"
+            onClick={removeItem}
+            aria-label="Remove Item"
+        >
+            <i className="fa fa-trash text-danger" />
+        </Button>
+    </Col>
+</Row>
+
     );
 }
 
