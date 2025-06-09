@@ -1,3 +1,4 @@
+const { version } = require('../package.json');
 const express = require('express');
 const app = express();
 const db = require('./persistence');
@@ -8,6 +9,11 @@ const deleteItem = require('./routes/deleteItem');
 
 app.use(express.json());
 app.use(express.static(__dirname + '/static'));
+
+app.get('/version', (req, res) => {
+    res.send({ version });
+});
+
 
 app.get('/items', getItems);
 app.post('/items', addItem);

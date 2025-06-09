@@ -163,5 +163,13 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
     );
 }
 
-
 ReactDOM.render(<App />, document.getElementById('root'));
+
+// Affiche dynamiquement la version dans le footer
+fetch('/version')
+    .then(res => res.json())
+    .then(data => {
+        const el = document.getElementById('app-version');
+        if (el) el.innerText = data.version;
+    });
+
