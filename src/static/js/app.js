@@ -143,23 +143,26 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
     };
 
     return (
-        <InputGroup className="mb-3">
-            <InputGroup.Checkbox
-                checked={completed}
-                onChange={e => setCompleted(e.target.checked)}
-            />
-            <Form.Control
-                value={name}
-                onChange={e => setName(e.target.value)}
-                disabled={updating}
-            />
-            <Button variant="success" onClick={updateItem} disabled={updating}>
-                ✅
-            </Button>
-            <Button variant="danger" onClick={deleteItem}>
-                🗑️
-            </Button>
-        </InputGroup>
+    <div className={`item mb-3 ${completed ? 'completed' : ''}`}>
+    <InputGroup>
+        <InputGroup.Checkbox
+            checked={completed}
+            onChange={e => setCompleted(e.target.checked)}
+        />
+        <Form.Control
+            value={name}
+            onChange={e => setName(e.target.value)}
+            disabled={updating}
+        />
+        <Button variant="success" onClick={updateItem} disabled={updating}>
+            ✅
+        </Button>
+        <Button variant="danger" onClick={deleteItem}>
+            🗑️
+        </Button>
+    </InputGroup>
+    </div>
+
     );
 }
 
