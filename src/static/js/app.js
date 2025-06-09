@@ -115,20 +115,19 @@ function AddItemForm({ onNewItem }) {
 }
 
 function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
-    const { Form, InputGroup, Button, Overlay, Tooltip } = ReactBootstrap;
+    const { Form, InputGroup, Button, Tooltip, OverlayTrigger } = ReactBootstrap;
     const [name, setName] = React.useState(item.name);
     const [completed, setCompleted] = React.useState(item.completed);
     const [updating, setUpdating] = React.useState(false);
     const [showTooltip, setShowTooltip] = React.useState(false);
-    const [target, setTarget] = React.useState(null);
-    const tooltipRef = React.useRef(null);
 
-    const updateItem = (e) => {
+    const updateItem = () => {
         setUpdating(true);
-        setTarget(e.target); // bouton cliqué
         fetch(`/items/${item.id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({ name, completed }),
         })
             .then(res => res.json())
@@ -147,7 +146,7 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
     };
 
     return (
-        <InputGroup className="mb-3" ref={tooltipRef}>
+        <InputGroup className="mb-3">
             <InputGroup.Checkbox
                 checked={completed}
                 onChange={e => setCompleted(e.target.checked)}
@@ -157,23 +156,22 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
                 onChange={e => setName(e.target.value)}
                 disabled={updating}
             />
-            <Button
-                variant="success"
-                onClick={updateItem}
-                disabled={updating}
+            <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip>Modifications enregistrées !</Tooltip>}
+                show={showTooltip}
             >
-                ✅
-            </Button>
+                <Button variant="success" onClick={updateItem} disabled={updating}>
+                    ✅
+                </Button>
+            </OverlayTrigger>
             <Button variant="danger" onClick={deleteItem}>
                 🗑️
             </Button>
-
-            <Overlay target={target} show={showTooltip} placement="top" container={tooltipRef}>
-                <Tooltip>Modifications enregistrées !</Tooltip>
-            </Overlay>
         </InputGroup>
     );
 }
+
 
 
 
