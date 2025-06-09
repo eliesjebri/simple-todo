@@ -176,7 +176,7 @@ return (
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className={completed ? 'bg-light' : ''}
+                className={completed ? 'bg-soft-gray' : ''}
                 disabled={updating}
             />
         </Col>

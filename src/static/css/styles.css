@@ -37,3 +37,7 @@ body {
 button:focus {
     border: 1px solid #333;
 }
+
+.bg-soft-gray {
+    background-color: #4b4949; /* un peu plus foncé que #f8f9fa (bg-light) */
+}
