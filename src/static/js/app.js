@@ -158,7 +158,7 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
 
     return (
         <Container fluid className="mb-3">
-            <Row className="item shadow-sm p-3 mb-2 bg-white rounded align-items-center">
+            <Row className="item align-items-center">
                 <Col xs={1} className="text-center">
                     <Button
                         className="toggles"
@@ -172,11 +172,12 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
                         <i className={`far ${completed ? 'fa-check-square' : 'fa-square'}`} />
                     </Button>
                 </Col>
-                <Col xs={8} className={`name ${completed ? 'completed' : ''}`}>
+                <Col xs={8} className="name">
                     <Form.Control
                         type="text"
                         value={name}
                         onChange={e => setName(e.target.value)}
+                        className={completed ? 'completed' : ''}
                         disabled={updating}
                     />
                 </Col>
@@ -198,13 +199,14 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
                         onClick={removeItem}
                         aria-label="Remove Item"
                     >
-                        <i className="fa fa-trash" />
+                        <i className="fa fa-trash text-danger" />
                     </Button>
                 </Col>
             </Row>
         </Container>
     );
 }
+
 
 
 ReactDOM.render(<App />, document.getElementById('root'));
