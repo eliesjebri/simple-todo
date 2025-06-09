@@ -136,6 +136,20 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
             });
     };
 
+    const toggleCompletion = () => {
+        const newStatus = !completed;
+        setCompleted(newStatus);
+        fetch(`/items/${item.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, completed: newStatus }),
+        })
+            .then(res => res.json())
+            .then(onItemUpdate);
+    };
+
     const removeItem = () => {
         fetch(`/items/${item.id}`, {
             method: 'DELETE',
@@ -143,43 +157,48 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
     };
 
     return (
-        <Container fluid className={`item ${completed ? 'completed' : ''}`}>
-            <Row>
+        <Container fluid className="mb-3">
+            <Row className="item shadow-sm p-3 mb-2 bg-white rounded align-items-center">
                 <Col xs={1} className="text-center">
                     <Button
                         className="toggles"
                         size="sm"
                         variant="link"
-                        onClick={() => {
-                            setCompleted(!completed);
-                            updateItem();
-                        }}
+                        onClick={toggleCompletion}
                         aria-label={
                             completed ? 'Mark item as incomplete' : 'Mark item as complete'
                         }
                     >
-                        <i
-                            className={`far ${completed ? 'fa-check-square' : 'fa-square'}`}
-                        />
+                        <i className={`far ${completed ? 'fa-check-square' : 'fa-square'}`} />
                     </Button>
                 </Col>
-                <Col xs={10} className="name">
+                <Col xs={8} className={`name ${completed ? 'completed' : ''}`}>
                     <Form.Control
                         type="text"
                         value={name}
                         onChange={e => setName(e.target.value)}
-                        onBlur={updateItem}
                         disabled={updating}
                     />
+                </Col>
+                <Col xs={1} className="text-center">
+                    <Button
+                        size="sm"
+                        variant="success"
+                        onClick={updateItem}
+                        disabled={updating}
+                        aria-label="Update Item"
+                    >
+                        ✅
+                    </Button>
                 </Col>
                 <Col xs={1} className="text-center remove">
                     <Button
                         size="sm"
-                        variant="link"
+                        variant="danger"
                         onClick={removeItem}
                         aria-label="Remove Item"
                     >
-                        <i className="fa fa-trash text-danger" />
+                        <i className="fa fa-trash" />
                     </Button>
                 </Col>
             </Row>
