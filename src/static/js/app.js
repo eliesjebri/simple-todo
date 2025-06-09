@@ -155,60 +155,56 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
             method: 'DELETE',
         }).then(() => onItemRemoval(item));
     };
+return (
+    <Row className="item align-items-center">
+        <Col xs={1} className="text-center">
+            <Button
+                className="toggles"
+                size="sm"
+                variant="link"
+                onClick={toggleCompletion}
+                aria-label={
+                    completed ? 'Mark item as incomplete' : 'Mark item as complete'
+                }
+            >
+                <i className={`far ${completed ? 'fa-check-square' : 'fa-square'}`} />
+            </Button>
+        </Col>
 
-    return (
-<Row>
-    <Col xs={1} className="text-center">
-        <Button
-            className="toggles"
-            size="sm"
-            variant="link"
-            onClick={toggleCompletion}
-            aria-label={
-                item.completed
-                    ? 'Mark item as incomplete'
-                    : 'Mark item as complete'
-            }
-        >
-            <i className={`far ${item.completed ? 'fa-check-square' : 'fa-square'}`} />
-        </Button>
-    </Col>
+        <Col xs={8} className="name">
+            <Form.Control
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={completed ? 'bg-light' : ''}
+                disabled={updating}
+            />
+        </Col>
 
-    <Col xs={8} className="name">
-        <Form.Control
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className={item.completed ? 'completed' : ''}
-            disabled={updating}
-        />
-    </Col>
+        <Col xs={3} className="text-center d-flex justify-content-around">
+            <Button
+                size="sm"
+                variant="success"
+                onClick={updateItem}
+                disabled={updating}
+                aria-label="Update Item"
+            >
+                ✅
+            </Button>
 
-    <Col xs={1} className="text-center">
-        <Button
-            size="sm"
-            variant="success"
-            onClick={updateItem}
-            disabled={updating}
-            aria-label="Update Item"
-        >
-            ✅
-        </Button>
-    </Col>
+            <Button
+                size="sm"
+                variant="danger"
+                onClick={removeItem}
+                aria-label="Remove Item"
+            >
+                <i className="fa fa-trash" />
+            </Button>
+        </Col>
+    </Row>
+);
 
-    <Col xs={1} className="text-center remove">
-        <Button
-            size="sm"
-            variant="link"
-            onClick={removeItem}
-            aria-label="Remove Item"
-        >
-            <i className="fa fa-trash text-danger" />
-        </Button>
-    </Col>
-</Row>
 
-    );
 }
 
 
