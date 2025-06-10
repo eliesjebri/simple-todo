@@ -1,3 +1,5 @@
+const isTTY = process.stdout.isTTY;
+
 const colors = {
     reset: "\x1b[0m",
     red: "\x1b[31m",
@@ -40,3 +42,4 @@ module.exports = {
     logWarn: (label, msg) => log('warn', label, msg),
     logError: (label, msg) => log('error', label, msg),
 };
+logInfo('TEST', 'Logging system is working');
