@@ -41,4 +41,5 @@ module.exports = {
     logInfo: (label, msg) => log('info', label, msg),
     logWarn: (label, msg) => log('warn', label, msg),
     logError: (label, msg) => log('error', label, msg),
+    logSuccess: (label, msg) => log('info', label, msg),
 };
