@@ -58,4 +58,4 @@ process.on('SIGTERM', gracefulShutdown);
 process.on('SIGUSR2', gracefulShutdown); // nodemon
 
 
-logInfo('TEST', 'Logging system is working');
+// logInfo('TEST', 'Logging system is working');
