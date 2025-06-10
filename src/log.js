@@ -42,4 +42,3 @@ module.exports = {
     logWarn: (label, msg) => log('warn', label, msg),
     logError: (label, msg) => log('error', label, msg),
 };
-logInfo('TEST', 'Logging system is working');

@@ -56,3 +56,6 @@ const gracefulShutdown = () => {
 process.on('SIGINT', gracefulShutdown);
 process.on('SIGTERM', gracefulShutdown);
 process.on('SIGUSR2', gracefulShutdown); // nodemon
+
+
+logInfo('TEST', 'Logging system is working');
