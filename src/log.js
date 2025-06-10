@@ -1,41 +1,42 @@
-// src/log.js
-
 const colors = {
     reset: "\x1b[0m",
-    bright: "\x1b[1m",
-    dim: "\x1b[2m",
     red: "\x1b[31m",
     green: "\x1b[32m",
     yellow: "\x1b[33m",
     blue: "\x1b[34m",
-    magenta: "\x1b[35m",
     cyan: "\x1b[36m",
 };
 
-function timestamp() {
-    return new Date().toISOString();
+const levels = ['debug', 'info', 'warn', 'error'];
+const currentLevel = process.env.LOG_LEVEL || 'info';
+
+function shouldLog(level) {
+    return levels.indexOf(level) >= levels.indexOf(currentLevel);
 }
 
-function logInfo(message) {
-    console.log(`${colors.cyan}[INFO] ${timestamp()}${colors.reset} ${message}`);
+function formatMessage(level, label, message) {
+    const color = {
+        debug: colors.cyan,
+        info: colors.blue,
+        warn: colors.yellow,
+        error: colors.red,
+    }[level] || colors.reset;
+
+    const timestamp = new Date().toISOString();
+    return `${color}[${timestamp}] [${label}] ${message}${colors.reset}`;
 }
 
-function logSuccess(message) {
-    console.log(`${colors.green}[OK]   ${timestamp()}${colors.reset} ${message}`);
+function log(level, label, message) {
+    if (!shouldLog(level)) return;
+
+    const formatted = formatMessage(level, label, message);
+    console.log(formatted);
 }
 
-function logWarn(message) {
-    console.warn(`${colors.yellow}[WARN] ${timestamp()}${colors.reset} ${message}`);
-}
-
-function logError(message, err = '') {
-    console.error(`${colors.red}[ERR]  ${timestamp()}${colors.reset} ${message}`);
-    if (err) console.error(err);
-}
-
+// Exported log functions
 module.exports = {
-    logInfo,
-    logSuccess,
-    logWarn,
-    logError,
+    logDebug: (label, msg) => log('debug', label, msg),
+    logInfo: (label, msg) => log('info', label, msg),
+    logWarn: (label, msg) => log('warn', label, msg),
+    logError: (label, msg) => log('error', label, msg),
 };
