@@ -12,7 +12,13 @@ const {
     MYSQL_DB: DB,
     MYSQL_DB_FILE: DB_FILE,
 } = process.env;
-
+console.log('[DEBUG] MySQL connection config:');
+console.log({
+    HOST,
+    USER,
+    PASSWORD,
+    DB,
+});
 let pool;
 
 async function init() {
@@ -27,7 +33,7 @@ async function init() {
         timeout: 10000,
         waitForDns: true,
     });
-
+console.log(`[DEBUG] Connecting to MySQL at host "${host}"`);
     pool = mysql.createPool({
         connectionLimit: 5,
         host,
