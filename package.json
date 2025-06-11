@@ -34,7 +34,7 @@
   "scripts": {
     "dev": "nodemon -L src/index.js",
     "prettify": "prettier -l --write \"**/*.js\"",
-    "test:unit:build": "jest spec/routes --testPathIgnorePatterns=getItem.invalid.spec.js",
+    "test:unit:build": "jest spec/routes --testPathIgnorePatterns=getItems.invalid.spec.js",
     "test:unit:fail": "jest spec/routes/getItem.invalid.spec.js",
     "test:integration:test": "jest spec/persistence/sqlite.spec.js",
     "test:functional:staging": "jest spec/persistence/mysql.spec.js",
