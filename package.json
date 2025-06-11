@@ -32,13 +32,13 @@
     "prettier": "^2.7.1"
   },
   "scripts": {
-   "dev": "nodemon -L src/index.js",
-   "prettify": "prettier -l --write \"**/*.js\"",
-   "test:unit": "jest spec/routes",
-   "test:sqlite": "jest spec/persistence/sqlite.spec.js",
-   "test:build": "yarn test:unit && yarn test:sqlite",
-   "test:mysql": "jest spec/persistence/mysql.spec.js",
-   "test": "yarn test:build && yarn test:mysql"
+    "dev": "nodemon -L src/index.js",
+    "prettify": "prettier -l --write \"**/*.js\"",
+    "test:unit:build": "jest spec/routes --testPathIgnorePatterns=getItem.invalid.spec.js",
+    "test:unit:fail": "jest spec/routes/getItem.invalid.spec.js",
+    "test:integration:test": "jest spec/persistence/sqlite.spec.js",
+    "test:functional:staging": "jest spec/persistence/mysql.spec.js",
+    "test": "yarn test:unit:build && yarn test:integration:test"
 }
 
 }
