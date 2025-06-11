@@ -27,7 +27,7 @@ RUN yarn test:unit:build --listTests --verbose --no-cache --runInBand --silent=f
 # 8. Lancer les tests selon le scope
 RUN if [ "$TEST_SCOPE" = "fail" ]; then \
       echo "💥 Test volontairement KO" && \
-      yarn test:unit:fail --verbose --no-cache --runInBand --silent=false || echo "✅ Échec volontaire détecté" ; \
+      yarn test:unit:fail --verbose --no-cache --runInBand --silent=false ; \
     else \
       echo "✅ Lancer tous les tests unitaires (OK seulement)" && \
       yarn test:unit:build --verbose --no-cache --runInBand --silent=false; \
