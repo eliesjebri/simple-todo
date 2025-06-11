@@ -24,14 +24,14 @@ ENV CI=true
 ARG TEST_RUN_TAG=none  # 👈 ceci sert à invalider le cache
 
 # 7. Lister les tests qui seront lancés (utile pour debug CI)
-RUN yarn test:unit:build --listTests --verbose  --runInBand --silent=false --colors --detectOpenHandles
+RUN yarn test:unit:build --listTests --verbose  --silent=false --colors --detectOpenHandles
 
 # 8. Lancer les tests selon le scope
 RUN echo "🧪 Test run tag: $TEST_RUN_TAG" && \
     if [ "$TEST_SCOPE" = "fail" ]; then \
       echo "💥 Test volontairement KO" && \
-      yarn test:unit:fail --verbose  --runInBand --silent=false --colors --detectOpenHandles; \
+      yarn test:unit:fail --verbose --silent=false --colors --detectOpenHandles; \
     else \
       echo "✅ Lancer tous les tests unitaires (OK seulement)" && \
-      yarn test:unit:build --verbose  --runInBand --silent=false --colors --detectOpenHandles; \
+      yarn test:unit:build --verbose  --silent=false --colors --detectOpenHandles; \
     fi
