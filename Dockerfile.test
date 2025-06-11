@@ -37,7 +37,8 @@ COPY .env.test .env
 ARG TEST_SCOPE=all
 ENV NODE_ENV=test
 ENV LOG_LEVEL=debug
-
+# Exécution conditionnelle des tests
+ARG TEST_RUN_TAG=none  # 👈 ceci sert à invalider le cache
 # Afficher les tests disponibles
 RUN yarn test:unit:build --listTests --silent=false --colors --detectOpenHandles
 
