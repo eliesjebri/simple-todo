@@ -20,12 +20,15 @@ ARG TEST_SCOPE=all
 
 # 6. Définir CI pour forcer l’affichage de jest dans Docker
 ENV CI=true
+# Exécution conditionnelle des tests
+ARG TEST_RUN_TAG=none  # 👈 ceci sert à invalider le cache
 
 # 7. Lister les tests qui seront lancés (utile pour debug CI)
 RUN yarn test:unit:build --listTests --verbose  --runInBand --silent=false --colors --detectOpenHandles
 
 # 8. Lancer les tests selon le scope
-RUN if [ "$TEST_SCOPE" = "fail" ]; then \
+RUN echo "🧪 Test run tag: $TEST_RUN_TAG" && \
+    if [ "$TEST_SCOPE" = "fail" ]; then \
       echo "💥 Test volontairement KO" && \
       yarn test:unit:fail --verbose  --runInBand --silent=false --colors --detectOpenHandles; \
     else \
