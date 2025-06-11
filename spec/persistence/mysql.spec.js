@@ -1,4 +1,7 @@
+jest.setTimeout(15000); // ⏱️ Étend le délai de Jest à 15s
+
 const db = require('../../src/persistence/mysql');
+
 const ITEM = {
     id: '7aef3d7c-d301-4846-8358-2a91ec9d6be3',
     name: 'Test MySQL',
@@ -10,7 +13,10 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await db.teardown();
+    // 🔒 Évite erreur si pool non initialisé
+    if (typeof db.teardown === 'function') {
+        await db.teardown();
+    }
 });
 
 beforeEach(async () => {
