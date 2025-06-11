@@ -18,12 +18,12 @@ services:
       timeout: 5s
       retries: 5
 
-  simple-todo-test:
+  simple-todo-staging:
     container_name: simple-todo-staging
     build:
       context: .
-      dockerfile: Dockerfile.test
-      target: preprod
+      dockerfile: Dockerfile.staging
+      target: staging
       args:
         TEST_SCOPE: ${TEST_SCOPE}
         TEST_RUN_TAG: ${TEST_RUN_TAG}
