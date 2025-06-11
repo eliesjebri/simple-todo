@@ -22,16 +22,13 @@ ARG TEST_SCOPE=all
 ENV CI=true
 
 # 7. Lister les tests qui seront lancés (utile pour debug CI)
-RUN yarn test:unit:build --listTests --verbose --no-cache --runInBand --silent=false >> test.log 2>&1 && \
-    cat test.log
+RUN yarn test:unit:build --listTests --verbose --no-cache --runInBand --silent=false --colors --detectOpenHandles
 
 # 8. Lancer les tests selon le scope
 RUN if [ "$TEST_SCOPE" = "fail" ]; then \
       echo "💥 Test volontairement KO" && \
-      yarn test:unit:fail --verbose --no-cache --runInBand --silent=false >> test.log 2>&1 && \
-      cat test.log; \
+      yarn test:unit:fail --verbose --no-cache --runInBand --silent=false --colors --detectOpenHandles; \
     else \
       echo "✅ Lancer tous les tests unitaires (OK seulement)" && \
-      yarn test:unit:build --verbose --no-cache --runInBand --silent=false >> test.log 2>&1 && \
-      cat test.log; \
+      yarn test:unit:build --verbose --no-cache --runInBand --silent=false --colors --detectOpenHandles; \
     fi
