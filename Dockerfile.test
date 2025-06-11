@@ -1,20 +1,5 @@
 # ---------------------------------------------------
-# Étape 1 : Installer les dépendances de production
-# ---------------------------------------------------
-FROM node:18-alpine AS deps
-
-# Définir le répertoire de travail
-WORKDIR /app
-
-# Copier uniquement les fichiers nécessaires pour l'installation
-COPY package.json yarn.lock ./
-
-# Installer uniquement les dépendances de production
-RUN yarn install --frozen-lockfile --production
-
-
-# ---------------------------------------------------
-# Étape 2 : Étape de test avec toutes les dépendances
+# Étape 1 : Étape de test avec toutes les dépendances
 # ---------------------------------------------------
 FROM node:18-alpine AS test
 
@@ -30,10 +15,6 @@ RUN yarn install --frozen-lockfile
 COPY .env.test .env
 
 # Argument pour choisir quels tests exécuter
-# Valeurs possibles :
-#   TEST_SCOPE=all         -> unitaires + intégration SQLite
-#   TEST_SCOPE=integration -> uniquement intégration SQLite
-#   TEST_SCOPE=fail        -> uniquement test KO
 ARG TEST_SCOPE=all
 ENV NODE_ENV=test
 ENV LOG_LEVEL=debug
@@ -45,42 +26,15 @@ RUN yarn test:unit:build --listTests --silent=false --colors --detectOpenHandles
 # Exécuter les bons tests en fonction de TEST_SCOPE
 RUN echo "🧪 Test run tag: $TEST_RUN_TAG" && \
     if [ "$TEST_SCOPE" = "integration" ]; then \
+      echo "🔍 Intégration uniquement (SQLite)" && \
       yarn test:integration:test --verbose --silent=false --colors --detectOpenHandles ; \
     elif [ "$TEST_SCOPE" = "fail" ]; then \
+      echo "💥 Test KO volontaire" && \
       yarn test:unit:fail --verbose --silent=false --colors --detectOpenHandles  ; \
     else \
+      echo "✅ Unitaires + Intégration SQLite" && \
       yarn test:unit:build --verbose --silent=false --colors --detectOpenHandles && \
       yarn test:integration:test --verbose --silent=false --colors --detectOpenHandles; \
     fi
 
 
-# ---------------------------------------------------
-# Étape 3 : Image finale prête à l’emploi (sans dev deps)
-# ---------------------------------------------------
-FROM node:18-alpine AS final
-
-WORKDIR /app
-
-# Copier uniquement les sources validées depuis le stage test
-COPY --from=test /app/src ./src
-COPY --from=test /app/static ./static
-COPY --from=test /app/.env.production .env
-
-# Copier uniquement les modules prod
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/package.json ./package.json
-COPY --from=deps /app/yarn.lock ./yarn.lock
-
-# Définir les variables d'environnement de production
-ENV NODE_ENV=production
-ENV LOG_LEVEL=info
-
-# Ajouter un LABEL pour la traçabilité de l’image
-LABEL maintainer="Elies Jebri <e.ji@mail.com>" \
-      org.opencontainers.image.source="https://github.com/eliesjebri/simple-todo" \
-      org.opencontainers.image.version="1.0.0" \
-      org.opencontainers.image.description="Image finale simple-todo validée après tests"
-
-EXPOSE 3000
-
-CMD ["node", "src/index.js"]
