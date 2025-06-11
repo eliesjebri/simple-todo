@@ -18,10 +18,13 @@ ENV LOG_LEVEL=debug
 # 5. Argument de contrôle du scope de test
 ARG TEST_SCOPE=all
 
-# 6. Lister les tests qui seront lancés (utile pour debug CI)
+# 6. Définir CI pour forcer l’affichage de jest dans Docker
+ENV CI=true
+
+# 7. Lister les tests qui seront lancés (utile pour debug CI)
 RUN yarn test:unit:build --listTests
 
-# 7. Lancer les tests selon le scope
+# 8. Lancer les tests selon le scope
 RUN if [ "$TEST_SCOPE" = "fail" ]; then \
       echo "💥 Test volontairement KO" && \
       yarn test:unit:fail || echo "✅ Échec volontaire détecté" ; \
