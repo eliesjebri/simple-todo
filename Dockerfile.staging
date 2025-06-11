@@ -1,0 +1,31 @@
+# -------------------------------------------
+# Stage: preprod (tests fonctionnels + E2E)
+# -------------------------------------------
+FROM node:18-alpine AS staging
+
+WORKDIR /app
+
+# Copier tout le code et les tests
+COPY . .
+
+# Installer les dépendances
+RUN yarn install --frozen-lockfile
+
+# Injecter le fichier d'environnement staging
+COPY .env.staging .env
+
+# Argument (injecté depuis CLI/CI)
+ARG TEST_RUN_TAG=not-set
+ENV TEST_RUN_TAG=${TEST_RUN_TAG}
+
+# Variables d’environnement pour Jest
+ENV NODE_ENV=staging
+ENV LOG_LEVEL=debug
+ENV CI=true
+
+# Exécuter les tests fonctionnels (MySQL)
+RUN echo "🧪 Lancement tests staging - TAG: $TEST_RUN_TAG" && \
+    yarn test:functional:staging --verbose  --silent=false --colors --detectOpenHandles
+
+# ⚠️ Placeholder pour E2E tests (à venir)
+# RUN yarn test:e2e:staging || echo "Pas encore de E2E test"
