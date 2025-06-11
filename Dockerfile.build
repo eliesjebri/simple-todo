@@ -22,13 +22,13 @@ ARG TEST_SCOPE=all
 ENV CI=true
 
 # 7. Lister les tests qui seront lancés (utile pour debug CI)
-RUN yarn test:unit:build --listTests
+RUN yarn test:unit:build --listTests --verbose
 
 # 8. Lancer les tests selon le scope
 RUN if [ "$TEST_SCOPE" = "fail" ]; then \
       echo "💥 Test volontairement KO" && \
-      yarn test:unit:fail || echo "✅ Échec volontaire détecté" ; \
+      yarn test:unit:fail --verbose || echo "✅ Échec volontaire détecté" ; \
     else \
       echo "✅ Lancer tous les tests unitaires (OK seulement)" && \
-      yarn test:unit:build ; \
+      yarn test:unit:build --verbose; \
     fi
