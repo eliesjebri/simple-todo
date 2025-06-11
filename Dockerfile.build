@@ -27,6 +27,9 @@ ARG TEST_RUN_TAG=none  # 👈 ceci sert à invalider le cache
 RUN yarn test:unit:build --listTests --verbose  --silent=false --colors --detectOpenHandles
 
 # 8. Lancer les tests selon le scope
+# Argument de scope (valeurs : functional, e2e, all)
+ARG TEST_SCOPE=all
+
 RUN echo "🧪 Test run tag: $TEST_RUN_TAG" && \
     if [ "$TEST_SCOPE" = "fail" ]; then \
       echo "💥 Test volontairement KO" && \

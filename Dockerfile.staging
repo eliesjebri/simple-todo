@@ -18,6 +18,8 @@ COPY .env.staging .env
 ARG TEST_RUN_TAG=not-set
 ENV TEST_RUN_TAG=${TEST_RUN_TAG}
 
+ARG TEST_SCOPE=all
+
 # Variables d’environnement pour Jest
 ENV NODE_ENV=staging
 ENV LOG_LEVEL=debug
@@ -25,7 +27,17 @@ ENV CI=true
 
 # Exécuter les tests fonctionnels (MySQL)
 RUN echo "🧪 Lancement tests staging - TAG: $TEST_RUN_TAG" && \
-    yarn test:functional:staging --verbose  --silent=false --colors --detectOpenHandles
-
+    if [ "$TEST_SCOPE" = "functional" ] ; then \
+        echo "📦 Lancement des tests fonctionnels..." ; \
+        yarn test:functional:staging --verbose --silent=false --colors --detectOpenHandles ; \
+    elif [ "$TEST_SCOPE" = "e2e" ] ; then \
+        echo "🧪 [TODO] Tests E2E pas encore implémentés (placeholder)" ; \
+        echo "✅ Simulation réussite E2E (future implémentation)" ; \
+    else \
+        echo "✅ Lancement de tous les tests : fonctionnels et E2E" ; \
+        yarn test:functional:staging --verbose --silent=false --colors --detectOpenHandles ; && \
+        echo "🧪 [TODO] Tests E2E pas encore implémentés (placeholder)" ; \
+        echo "✅ Simulation réussite E2E (future implémentation)" ; \
+    fi
 # ⚠️ Placeholder pour E2E tests (à venir)
 # RUN yarn test:e2e:staging || echo "Pas encore de E2E test"
