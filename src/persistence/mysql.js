@@ -12,33 +12,32 @@ const {
     MYSQL_DB: DB,
     MYSQL_DB_FILE: DB_FILE,
 } = process.env;
+
+// ✅ Variables correctement nommées
 console.log('[DEBUG] MySQL connection config:', {
-    HOST: host,
-    USER: user,
-    PASSWORD: password,
-    DB: database,
-});
-console.log({
     HOST,
     USER,
     PASSWORD,
     DB,
 });
+
 let pool;
 
 async function init() {
-    const host = HOST_FILE ? fs.readFileSync(HOST_FILE) : HOST;
-    const user = USER_FILE ? fs.readFileSync(USER_FILE) : USER;
-    const password = PASSWORD_FILE ? fs.readFileSync(PASSWORD_FILE) : PASSWORD;
-    const database = DB_FILE ? fs.readFileSync(DB_FILE) : DB;
+    const host = HOST_FILE ? fs.readFileSync(HOST_FILE, 'utf-8').trim() : HOST;
+    const user = USER_FILE ? fs.readFileSync(USER_FILE, 'utf-8').trim() : USER;
+    const password = PASSWORD_FILE ? fs.readFileSync(PASSWORD_FILE, 'utf-8').trim() : PASSWORD;
+    const database = DB_FILE ? fs.readFileSync(DB_FILE, 'utf-8').trim() : DB;
 
-    await waitPort({ 
-        host, 
+    await waitPort({
+        host,
         port: 3306,
         timeout: 10000,
         waitForDns: true,
     });
-console.log(`[DEBUG] Connecting to MySQL at host "${host}"`);
+
+    console.log(`[DEBUG] Connecting to MySQL at host "${host}"`);
+
     pool = mysql.createPool({
         connectionLimit: 5,
         host,
@@ -53,8 +52,7 @@ console.log(`[DEBUG] Connecting to MySQL at host "${host}"`);
             'CREATE TABLE IF NOT EXISTS todo_items (id varchar(36), name varchar(255), completed boolean) DEFAULT CHARSET utf8mb4',
             err => {
                 if (err) return rej(err);
-
-                console.log(`Connected to mysql db at host ${HOST}`);
+                console.log(`Connected to mysql db at host ${host}`);
                 acc();
             },
         );
@@ -63,10 +61,14 @@ console.log(`[DEBUG] Connecting to MySQL at host "${host}"`);
 
 async function teardown() {
     return new Promise((acc, rej) => {
-        pool.end(err => {
-            if (err) rej(err);
-            else acc();
-        });
+        if (pool) {
+            pool.end(err => {
+                if (err) rej(err);
+                else acc();
+            });
+        } else {
+            acc(); // pool non initialisé : on continue proprement
+        }
     });
 }
 
