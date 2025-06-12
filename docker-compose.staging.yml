@@ -22,6 +22,10 @@ services:
       args:
         TEST_SCOPE: ${TEST_SCOPE}
         TEST_RUN_TAG: ${TEST_RUN_TAG}
+        MYSQL_HOST: ${MYSQL_HOST}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DB: ${MYSQL_DB}
     depends_on:
       mysql-staging:
         condition: service_healthy

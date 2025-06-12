@@ -19,11 +19,21 @@ ARG TEST_RUN_TAG=not-set
 ENV TEST_RUN_TAG=${TEST_RUN_TAG}
 
 ARG TEST_SCOPE=all
-
+ENV TEST_SCOPE=all
 # Variables d’environnement pour Jest
 ENV NODE_ENV=staging
 ENV LOG_LEVEL=debug
 ENV CI=true
+
+ARG MYSQL_HOST
+ARG MYSQL_USER
+ARG MYSQL_PASSWORD
+ARG MYSQL_DB
+
+ENV MYSQL_HOST=${MYSQL_HOST}
+ENV MYSQL_USER=${MYSQL_USER}
+ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
+ENV MYSQL_DB=${MYSQL_DB}
 
 # Exécuter les tests fonctionnels (MySQL)
 RUN echo "🧪 Lancement tests staging - TAG: $TEST_RUN_TAG" ; \
