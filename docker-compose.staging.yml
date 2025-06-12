@@ -5,6 +5,11 @@ services:
     container_name: mysql-staging
     restart: unless-stopped
     env_file: .env.staging
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}             
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     healthcheck:
@@ -24,7 +29,7 @@ services:
         TEST_RUN_TAG: ${TEST_RUN_TAG}
         MYSQL_HOST: ${MYSQL_HOST}
         MYSQL_USER: ${MYSQL_USER}
-        MYSQL_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         MYSQL_DB: ${MYSQL_DB}
     depends_on:
       mysql-staging:
