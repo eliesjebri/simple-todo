@@ -12,7 +12,12 @@ const {
     MYSQL_DB: DB,
     MYSQL_DB_FILE: DB_FILE,
 } = process.env;
-console.log('[DEBUG] MySQL connection config:');
+console.log('[DEBUG] MySQL connection config:', {
+    HOST: host,
+    USER: user,
+    PASSWORD: password,
+    DB: database,
+});
 console.log({
     HOST,
     USER,
