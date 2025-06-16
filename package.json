@@ -1,5 +1,5 @@
 {
-  "name": "101-app",
+  "name": "simple-todo",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -34,11 +34,15 @@
   "scripts": {
     "dev": "nodemon -L src/index.js",
     "prettify": "prettier -l --write \"**/*.js\"",
-    "test:unit:build": "jest spec/routes --testPathIgnorePatterns=getItems.invalid.spec.js",
+    "test:unit:all": "jest spec/routes --testPathIgnorePatterns=getItems.invalid.spec.js",
+    "test:unit:addItem": "jest spec/routes/addItem.valid.spec.js",
+    "test:unit:getItems": "jest spec/routes/getItems.valid.spec.js",
+    "test:unit:deleteItem": "jest spec/routes/deleteItem.valid.spec.js",
+    "test:unit:updateItem": "jest spec/routes/updateItem.invalid.spec.js",
     "test:unit:fail": "jest spec/routes/getItem.invalid.spec.js",
-    "test:integration:test": "jest spec/persistence/sqlite.spec.js",
-    "test:functional:staging": "jest spec/persistence/mysql.spec.js",
-    "test": "yarn test:unit:build && yarn test:integration:test"
+    "test:integration:sqlite": "jest spec/persistence/sqlite.spec.js",
+    "test:functional:mysql": "jest spec/persistence/mysql.spec.js",
+    "test:unitandintegration:test": "yarn test:unit:build && yarn test:integration:test"
 }
 
 }

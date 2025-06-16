@@ -11,19 +11,22 @@ RUN yarn install --frozen-lockfile
 # Copier le code et les tests
 COPY . .
 
+# Variables d’environnement unitaires uniquement
+# Argument pour invalider le cache dans CI
+ARG TEST_RUN_TAG=none
+# Argument de scope (valeurs : functional, e2e, all)
+ARG TEST_SCOPE=all
+
+ENV TEST_RUN_TAG=${TEST_RUN_TAG}
+ENV TEST_SCOPE=${TEST_SCOPE}
 ENV NODE_ENV=test
 ENV LOG_LEVEL=debug
 ENV CI=true
 
-# Argument pour invalider le cache dans CI
-ARG TEST_RUN_TAG=none
-ENV TEST_RUN_TAG=$TEST_RUN_TAG
-
 # Lister les tests qui seront lancés (utile pour debug CI)
-RUN yarn test:unit:build --listTests --verbose  --silent=false --colors --detectOpenHandles
+RUN yarn test:unit:all --listTests --verbose  --silent=false --colors --detectOpenHandles
 
-# Argument de scope (valeurs : functional, e2e, all)
-ARG TEST_SCOPE=all    
+    
 
 RUN echo "🧪 Lancement des tests unitaires - TAG: $TEST_RUN_TAG" && \
     if [ "$TEST_SCOPE" = "fail" ]; then \
@@ -31,7 +34,7 @@ RUN echo "🧪 Lancement des tests unitaires - TAG: $TEST_RUN_TAG" && \
       yarn test:unit:fail --verbose --silent=false --colors --detectOpenHandles; \
     else \
       echo "✅ Lancer tous les tests unitaires (OK seulement)" && \
-      yarn test:unit:build --verbose  --silent=false --colors --detectOpenHandles; \
+      yarn test:unit:all --verbose  --silent=false --colors --detectOpenHandles; \
     fi
 
 # ----------------------------
@@ -53,7 +56,7 @@ ENV MYSQL_USER=$MYSQL_USER
 ENV MYSQL_PASSWORD=$MYSQL_PASSWORD
 ENV MYSQL_DB=$MYSQL_DB
 
-CMD ["yarn", "test:integration:test", "--verbose", "--silent=false", "--colors", "--detectOpenHandles"]
+CMD ["yarn", "test:integration:sqlite", "--verbose", "--silent=false", "--colors", "--detectOpenHandles"]
 
 # ----------------------------
 # Étape 3 : Base pour tests fonctionnels (staging)
@@ -80,12 +83,12 @@ ENV MYSQL_DB=$MYSQL_DB
 
 RUN echo "🧪 Lancement tests staging - TAG: $TEST_RUN_TAG" && \
     if [ "$TEST_SCOPE" = "functional" ]; then \
-        yarn test:functional:staging --verbose --silent=false --colors --detectOpenHandles ; \
+        yarn test:functional:mysql --verbose --silent=false --colors --detectOpenHandles ; \
     elif [ "$TEST_SCOPE" = "e2e" ]; then \
         echo "🧪 [TODO] Tests E2E pas encore implémentés (placeholder)" && \
         echo "✅ Simulation réussite E2E (future implémentation)" ; \
     else \
-        yarn test:functional:staging --verbose --silent=false --colors --detectOpenHandles && \
+        yarn test:functional:mysql --verbose --silent=false --colors --detectOpenHandles && \
         echo "🧪 [TODO] Tests E2E pas encore implémentés (placeholder)" && \
         echo "✅ Simulation réussite E2E (future implémentation)" ; \
     fi
