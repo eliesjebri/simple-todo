@@ -14,7 +14,6 @@ pipeline {
         sh """
           docker build \
             --target=build \
-            --env-file .env.build \
             --build-arg TEST_RUN_TAG=${TEST_RUN_TAG} \
             -t ${IMAGE_TAG} \
             --progress=plain .
