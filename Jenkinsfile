@@ -24,13 +24,18 @@ pipeline {
     stage('Push image trash') {
       steps {
         echo "📤 Push image vers le registre : ${IMAGE_TAG}"
-        echo "Using registry user: $REGISTRY_USER"
+//        echo "Using registry user: $REGISTRY_USER"
 
-        withCredentials([usernamePassword(credentialsId: 'local-docker-registry', usernameVariable: 'REGISTRY_USER', passwordVariable: 'REGISTRY_PASS')]) {
-          sh '''
-            echo "$REGISTRY_PASS" | docker login local-registry:5000 -u "$REGISTRY_USER" --password-stdin
-            docker push $IMAGE_TAG
-          '''
+        withCredentials([usernamePassword(
+          credentialsId: 'local-docker-registry',
+          usernameVariable: 'REGISTRY_USER', 
+          passwordVariable: 'REGISTRY_PASS'
+          )]) {
+            sh '''
+              echo "🔐 Utilisation des identifiants de login : $REGISTRY_USER"
+              echo "$REGISTRY_PASS" | docker login local-registry:5000 -u "$REGISTRY_USER" --password-stdin
+              docker push $IMAGE_TAG
+            '''
         }
       }
     }
